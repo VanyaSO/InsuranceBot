@@ -28,7 +28,7 @@ The main goal of the bot is to simplify the process of getting insurance and mak
 3. Run the container:
 
 ```bash
-  docker run -d -p 8080:80 --env-file .env --name InsuranceBot insurance_bot
+  docker run -d -p 8080:80 --env-file .env --name InsuranceBot insurance-bot
 ```
 
 ## Usage
