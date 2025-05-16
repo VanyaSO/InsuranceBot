@@ -18,7 +18,8 @@ public class Program
     static async Task Main()
     {
         // Load variables from .env file
-        DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
+        string envFilePath = Path.Combine(AppContext.BaseDirectory, "../../../../.env");
+        DotEnv.Load(options: new DotEnvOptions(envFilePaths: new[] { envFilePath }, probeForEnv: false));
 
         var services = new ServiceCollection();
         services.AddLogging(builder => builder.AddConsole());
@@ -61,10 +62,11 @@ public class Program
         try
         {
             await Task.Delay(-1, cts.Token);
+            Console.ReadKey();
         }
         catch (TaskCanceledException ex)
         {
-            logger.LogInformation(ex, "Приложение остановлено.");
+            logger.LogInformation(ex, "App stopped.");
         }
     }
 
