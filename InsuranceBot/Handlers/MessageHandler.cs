@@ -27,6 +27,8 @@ public class MessageHandler
             await _commandHandler.HandleCommandAsync(message);
         else if (text.StartsWithEmoji())
             await _registrationHandler.HandleButtonAsync(message);
+        else if (!string.IsNullOrEmpty(text))
+            await _registrationHandler.HandleMessage(message);
         else if (_registrationService.IsExpectingUploadPhoto(userId))
             await _registrationHandler.HandleUploadPhotoAsync(message);
     }

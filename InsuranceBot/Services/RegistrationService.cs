@@ -144,4 +144,9 @@ public class RegistrationService
 
         return string.Empty;
     }
+    
+    public UserProcess? GetUserProcess(long userId) => _progress.GetValueOrDefault(userId, null);
+
+    public bool IsDiscussing(long userId) =>
+        _progress.TryGetValue(userId, out var userProcess) && userProcess.IsDiscussing;
 }

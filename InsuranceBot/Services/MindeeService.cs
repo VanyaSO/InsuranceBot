@@ -19,36 +19,52 @@ public class MindeeService
 
     public async Task<IdCardDto?> GetIdCardDataAsync(string filePath)
     {
-        return await GetDocumentDataAsync<IdCardDto>("id_card",
-            filePath,
-            fields => new IdCardDto
-            {
-                FullName = $"{GetFieldValue(fields, "full_name")} {GetFieldValue(fields, "patronymic")}",
-                DateOfBirth = GetFieldValue(fields, "date_of_birth"),
-                DocumentNumber = GetFieldValue(fields, "document_no")
-            });
+        return new IdCardDto
+        {
+            FullName = $"test",
+            DateOfBirth = "test",
+            DocumentNumber = "test"
+        };
+        // return await GetDocumentDataAsync<IdCardDto>("id_card",
+        //     filePath,
+        //     fields => new IdCardDto
+        //     {
+        //         FullName = $"{GetFieldValue(fields, "full_name")} {GetFieldValue(fields, "patronymic")}",
+        //         DateOfBirth = GetFieldValue(fields, "date_of_birth"),
+        //         DocumentNumber = GetFieldValue(fields, "document_no")
+        //     });
     }
 
     public async Task<VRDFrontSideDto?> GetVrdFrontSideDataAsync(string filePath)
     {
-        return await GetDocumentDataAsync<VRDFrontSideDto>("vehicle_registration_certificate__front_side",
-            filePath,
-            fields => new VRDFrontSideDto
-            {
-                CarNumber = GetFieldValue(fields, "vehicle_registration_number")
-            });
+        return new VRDFrontSideDto
+        {
+            CarNumber = "test"
+        };
+        // return await GetDocumentDataAsync<VRDFrontSideDto>("vehicle_registration_certificate__front_side",
+        //     filePath,
+        //     fields => new VRDFrontSideDto
+        //     {
+        //         CarNumber = GetFieldValue(fields, "vehicle_registration_number")
+        //     });
     }
 
     public async Task<VRDBackSideDto?> GetVrdBackSideDataAsync(string filePath)
     {
-        return await GetDocumentDataAsync<VRDBackSideDto>("vehicle_registration_certificate__back_side",
-            filePath,
-            fields => new VRDBackSideDto
-            {
-                CarBrand = GetFieldValue(fields, "commercial_description"),
-                CarModel = GetFieldValue(fields, "vehicle_make"),
-                VIN = GetFieldValue(fields, "vehicle_identification_number")
-            });
+        return new VRDBackSideDto
+        {
+            CarBrand = "commercial_description",
+            CarModel = "vehicle_make",
+            VIN = "vehicle_identification_number"
+        };
+        // return await GetDocumentDataAsync<VRDBackSideDto>("vehicle_registration_certificate__back_side",
+        //     filePath,
+        //     fields => new VRDBackSideDto
+        //     {
+        //         CarBrand = GetFieldValue(fields, "commercial_description"),
+        //         CarModel = GetFieldValue(fields, "vehicle_make"),
+        //         VIN = GetFieldValue(fields, "vehicle_identification_number")
+        //     });
     }
 
     private async Task<T?> GetDocumentDataAsync<T>(

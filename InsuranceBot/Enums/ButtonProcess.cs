@@ -12,5 +12,9 @@ public enum ButtonProcess
     [Description("❌No")]
     No,
     [Description("✅Yes")]
-    Yes
+    Yes,
+    [Description("🔙Back")]
+    Back,
+    [Description("➡️Continue")]
+    Continue
 }

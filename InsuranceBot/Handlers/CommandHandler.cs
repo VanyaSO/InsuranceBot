@@ -24,7 +24,7 @@ public class CommandHandler
             return;
 
         var keyboard = KeyboardHelper.MainMenuKeyboard();
-        string? welcomeMessage = await _openAiService.GenerateMessageAsync($"Say hello (no emoji), tell them you are a bot that will help them create car insurance, and ask them to click the '{ButtonProcess.Start.GetDescription()}' button to begin the insurance process.");
+        string? welcomeMessage = await _openAiService.GenerateMessageAsync($"Say hello, say that you are a bot that will help you get car insurance (not figure it out, not find it, but get it), and ask them to press the button \"{ButtonProcess.Start.GetDescription()}\" to start the process of getting car insurance. Use 0 emoji");
 
         await _botClient.SendMessage(
             message.Chat.Id,

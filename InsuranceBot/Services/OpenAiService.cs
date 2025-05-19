@@ -10,7 +10,9 @@ public class OpenAiService
 {
     private readonly ILogger<OpenAiService> _logger;
     private readonly string _apiKey;
-    private readonly string _apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+
+    private readonly string _apiUrl =
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
 
     public OpenAiService(ILogger<OpenAiService> logger)
     {
@@ -38,10 +40,13 @@ public class OpenAiService
                         {
                             new
                             {
-                                text = $"Generate a response for a Telegram bot in English based on the following context: {context}. " +
-                                       "Use a friendly and professional tone. Include 0-2 relevant emojis. " +
-                                       "Avoid using greetings like 'hello' or 'hi' unless it is written in context." +
-                                       "Do not say 'thank you' unless explicitly requested in the context. Return text only, no Markdown or code."
+                                text =
+                                    $"Generate a response to the Telegram bot in English based on the following context: {context}." +
+                                    "Use a friendly and professional tone. Include 0-2 relevant emoji." +
+                                    "Avoid using greetings like \"hello\" or \"h\" unless they are written in context." +
+                                    "Don't say \"thank you\" unless the context clearly requires it. Return only the response text, no text in the request, no Markdown or code." +
+                                    "If the context starts with \"Discussing:\", it means the user asked you a question directly and you should contact them as an assistant." +
+                                    "A little about you who you should be, you are an assistant who helps to issue car insurance with documents."
                             }
                         }
                     }
@@ -65,7 +70,7 @@ public class OpenAiService
             return null;
         }
     }
-    
+
     public async Task<string?> GenerateInsuranceAsync(InsuranceDetails insuranceDetails)
     {
         if (string.IsNullOrEmpty(_apiKey))
@@ -113,8 +118,8 @@ public class OpenAiService
 
     private string GetRequestText(InsuranceDetails insuranceDetails)
     {
-        string template = 
-            $"Generate a car insurance policy by populating this template with the provided data. Maintain all formatting and field names exactly as in the template. Return only the completed policy without additional commentary.\n\n"+
+        string template =
+            $"Generate a car insurance policy by populating this template with the provided data. Maintain all formatting and field names exactly as in the template. Return only the completed policy without additional commentary.\n\n" +
             "CAR INSURANCE POLICY\n\n" +
             "\ud83d\udd39 Policy Number: {POLICY_NUMBER}\n" +
             "\ud83d\udd39 Issue Date: {ISSUE_DATE}\n" +
@@ -136,7 +141,7 @@ public class OpenAiService
             "\u2713 Vandalism\n" +
             "\u2713 Fire\n\n" +
             $"{insuranceDetails.ToString()}";
-        
+
         return $"{template}";
     }
 }

@@ -23,7 +23,7 @@ public class RegistrationProcessHandler
     private readonly Dictionary<StepProcess, Func<Message, Task>> _stepHandlers;
 
     private bool _isRestart;
-    private ReplyKeyboardMarkup _keyboard;
+    private ReplyKeyboardMarkup _keyboard = KeyboardHelper.CreateClearKeyboard();
 
     public RegistrationProcessHandler(ILogger<RegistrationProcessHandler> logger,
         RegistrationService registrationService, ITelegramBotClient botClient, MindeeService mindeeService,
@@ -50,8 +50,7 @@ public class RegistrationProcessHandler
     {
         long chatId = message.Chat.Id;
         long userId = message.From.Id;
-
-
+        
         // Execute with error handling and logging
         await ErrorHandler.HandleAsync(_logger, async () =>
         {
@@ -61,10 +60,30 @@ public class RegistrationProcessHandler
 
                 // Extract button text and initialize keyboard
                 string buttonText = message.Text;
-                _keyboard = new ReplyKeyboardMarkup(new List<KeyboardButton>()) { ResizeKeyboard = true };
+                _keyboard = KeyboardHelper.CreateClearKeyboard();
 
+                // Handle Back button press
+                if (buttonText == ButtonProcess.Back.GetDescription())
+                {
+                    string? startRegisterMessage = await _openAiService.GenerateMessageAsync("Prompt the user to start applying for insurance");
+                    await _botClient.SendMessage(
+                        chatId, 
+                        startRegisterMessage ?? "Let's start applying for insurance!", 
+                        replyMarkup: KeyboardHelper.MainMenuKeyboard());
+                }
+                // Handle Continue button press
+                if (buttonText == ButtonProcess.Continue.GetDescription() && _registrationService.IsDiscussing(userId))
+                {
+                    UserProcess? userProcess = _registrationService.GetUserProcess(userId);
+
+                    if (userProcess != null && userProcess.IsDiscussing)
+                    {
+                        userProcess.IsDiscussing = false;
+                        _registrationService.SetStep(userId, userProcess.PrevStep);
+                    }
+                }
                 // Handle Cancel button press
-                if (buttonText == ButtonProcess.Cancel.GetDescription())
+                else if (buttonText == ButtonProcess.Cancel.GetDescription())
                 {
                     // Clear user registration progress
                     _registrationService.RemoveUserProgress(userId);
@@ -85,6 +104,9 @@ public class RegistrationProcessHandler
                     _registrationService.StartRegistration(userId);
                 }
 
+                if (_registrationService.IsDiscussing(userId))
+                    return;
+                
                 // Get current registration step
                 StepProcess currentStep = _registrationService.GetCurrentStep(userId);
 
@@ -133,7 +155,7 @@ public class RegistrationProcessHandler
 
             string? tryAgainMessage = await _openAiService.GenerateMessageAsync("Tell the user to try uploading the photos again.");
             
-            _keyboard.AddButtons(ButtonProcess.Cancel.GetDescription());
+            _keyboard.AddButton(ButtonProcess.Cancel.GetDescription());
             await _botClient.SendMessage(
                 chatId, 
                 tryAgainMessage ?? "Please upload the photo again.",
@@ -247,9 +269,10 @@ public class RegistrationProcessHandler
 
         await ErrorHandler.HandleAsync(_logger, async () =>
         {
-            _keyboard = new ReplyKeyboardMarkup(new List<KeyboardButton>()) { ResizeKeyboard = true };
+            _keyboard = KeyboardHelper.CreateClearKeyboard();
 
-            _keyboard.AddButtons(ButtonProcess.Cancel.GetDescription());
+            if (KeyboardHelper.IsKeyboardHasButton(_keyboard, ButtonProcess.Cancel))
+                _keyboard.AddButton(ButtonProcess.Cancel.GetDescription());
 
             string? processingMessage = await _openAiService.GenerateMessageAsync("The photo is being processed. Ask to wait.");
             
@@ -409,5 +432,29 @@ public class RegistrationProcessHandler
             _logger.LogError(ex, $"Error downloading or saving file {fileId}. Error: {ex.Message}");
             return null;
         }
+    }
+
+    public async Task HandleMessage(Message message)
+    {
+        long userId = message.From.Id;
+        long chatId = message.Chat.Id;
+        
+        UserProcess? userProcess = _registrationService.GetUserProcess(userId);
+        if (userProcess != null && !userProcess.IsDiscussing)
+        {
+            userProcess.IsDiscussing = true;
+            _keyboard.AddButton(ButtonProcess.Continue.GetDescription());
+        }
+        else if (_registrationService.GetCurrentStep(userId) == StepProcess.None)
+        {
+            if (!KeyboardHelper.IsKeyboardHasButton(_keyboard, ButtonProcess.Back))
+                _keyboard.AddButton(ButtonProcess.Back.GetDescription());
+        }
+
+        string? answerMessage =  await _openAiService.GenerateMessageAsync($"Discussing: {message.Text}");
+        await _botClient.SendMessage(
+            chatId, 
+            answerMessage ?? "Sorry, I can't answer your question, please try again",
+            replyMarkup: _keyboard);
     }
 }

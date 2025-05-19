@@ -62,7 +62,6 @@ public class Program
         try
         {
             await Task.Delay(-1, cts.Token);
-            Console.ReadKey();
         }
         catch (TaskCanceledException ex)
         {

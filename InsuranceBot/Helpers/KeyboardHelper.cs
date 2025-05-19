@@ -16,4 +16,14 @@ public static class KeyboardHelper
         keyboard.AddButton(ButtonProcess.Start.GetDescription());
         return keyboard;
     }
+
+    public static ReplyKeyboardMarkup CreateClearKeyboard()
+    {
+        return new ReplyKeyboardMarkup(new List<KeyboardButton>()) { ResizeKeyboard = true };
+    }
+
+    public static bool IsKeyboardHasButton(ReplyKeyboardMarkup keyboard, ButtonProcess button)
+    {
+        return keyboard.Keyboard.Any(r => r.Any(b => b.Text == button.GetDescription()));
+    }
 }
