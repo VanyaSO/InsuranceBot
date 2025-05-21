@@ -329,28 +329,13 @@ public class RegistrationProcessHandler
 
                     break;
                 }
-                case StepProcess.VRDFrontSideUpload:
+                case StepProcess.VrdUpload:
                 {
-                    VRDFrontSideDto? dto = await _mindeeService.GetVrdFrontSideDataAsync(filePath);
+                    VrdDto? dto = await _mindeeService.GetVrdDataAsync(filePath);
                     if (dto != null)
                     {
                         insurance.CarNumber = dto.CarNumber;
-                        _registrationService.MoveToNextStep(userId);
-                    }
-                    else
-                        processingError = true;
-
-                    break;
-                }
-                case StepProcess.VRDBackSideUpload:
-                {
-                    VRDBackSideDto? dto = await _mindeeService.GetVrdBackSideDataAsync(filePath);
-                    if (dto != null)
-                    {
-                        insurance.CarBrand = dto.CarBrand;
-                        insurance.CarModel = dto.CarModel;
-                        insurance.VIN = dto.VIN;
-
+                        
                         _registrationService.MoveToNextStep(userId);
                         _keyboard.AddNewRow(
                             ButtonProcess.No.GetDescription(),

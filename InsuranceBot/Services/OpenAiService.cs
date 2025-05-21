@@ -130,9 +130,6 @@ public class OpenAiService
             "\u25b8 ID/Passport: {ID_NUMBER}\n\n" +
             "\ud83d\ude97 VEHICLE DETAILS:\n" +
             "\u25b8 License Plate: {CAR_NUMBER}\n" +
-            "\u25b8 Make: {CAR_BRAND}\n" +
-            "\u25b8 Model: {CAR_MODEL}\n" +
-            "\u25b8 VIN: {VIN}\n\n" +
             "\ud83d\udccb COVERED RISKS:\n" +
             "\u2713 Accident Damage\n" +
             "\u2713 Theft\n" +

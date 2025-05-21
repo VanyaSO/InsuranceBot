@@ -29,25 +29,13 @@ public class MindeeService
             });
     }
 
-    public async Task<VRDFrontSideDto?> GetVrdFrontSideDataAsync(string filePath)
+    public async Task<VrdDto?> GetVrdDataAsync(string filePath)
     {
-        return await GetDocumentDataAsync<VRDFrontSideDto>("vehicle_registration_certificate__front_side",
+        return await GetDocumentDataAsync<VrdDto>("vehicle_registration_certificate__front_side",
             filePath,
-            fields => new VRDFrontSideDto
+            fields => new VrdDto
             {
                 CarNumber = GetFieldValue(fields, "vehicle_registration_number")
-            });
-    }
-
-    public async Task<VRDBackSideDto?> GetVrdBackSideDataAsync(string filePath)
-    {
-        return await GetDocumentDataAsync<VRDBackSideDto>("vehicle_registration_certificate__back_side",
-            filePath,
-            fields => new VRDBackSideDto
-            {
-                CarBrand = GetFieldValue(fields, "commercial_description"),
-                CarModel = GetFieldValue(fields, "vehicle_make"),
-                VIN = GetFieldValue(fields, "vehicle_identification_number")
             });
     }
 

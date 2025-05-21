@@ -5,8 +5,7 @@ public enum StepProcess
 {
     Start,
     IdCardUpload,
-    VRDFrontSideUpload,
-    VRDBackSideUpload,
+    VrdUpload,
     ConfirmData,
     CostCalculation,
     IssuanceInsurancePolicy,

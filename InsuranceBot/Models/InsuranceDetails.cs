@@ -9,12 +9,9 @@ public class InsuranceDetails
     public string DateOfBirth { get; set; }
     public string IdCardNumber { get; set; }
     public string CarNumber { get; set; }
-    public string CarBrand { get; set; }
-    public string CarModel { get; set; }
-    public string VIN { get; set; }
     
     public override string ToString()
     {
-        return $"Policy Number: {PolicyNumber}\nIssue Date: {IssueDate:yyyy-MM-dd}\nEnd Date: {EndDate:yyyy-MM-dd}\nFull Name: {FullName}\nDate of Birth: {DateOfBirth}\nID/Passport: {IdCardNumber}\nCar Number: {CarNumber}\nCar Brand: {CarBrand}\nCar Model: {CarModel}\nVIN: {VIN}";
+        return $"Policy Number: {PolicyNumber}\nIssue Date: {IssueDate:yyyy-MM-dd}\nEnd Date: {EndDate:yyyy-MM-dd}\nFull Name: {FullName}\nDate of Birth: {DateOfBirth}\nID/Passport: {IdCardNumber}\nCar Number: {CarNumber}\n";
     }
 }

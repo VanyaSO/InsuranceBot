@@ -1,6 +1,6 @@
 namespace InsuranceBot.Models.DTO;
 
-public class VRDFrontSideDto
+public class VrdDto
 {
     public string CarNumber { get; set; }
 }

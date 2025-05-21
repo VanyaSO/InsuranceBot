@@ -18,8 +18,7 @@ public class RegistrationService
         _photoUploadSteps = new()
         {
             StepProcess.IdCardUpload,
-            StepProcess.VRDFrontSideUpload,
-            StepProcess.VRDBackSideUpload
+            StepProcess.VrdUpload
         };
         _openAiService = openAiService;
     }
@@ -46,9 +45,8 @@ public class RegistrationService
             userProcess.Step = userProcess.Step switch
             {
                 StepProcess.Start => StepProcess.IdCardUpload,
-                StepProcess.IdCardUpload => StepProcess.VRDFrontSideUpload,
-                StepProcess.VRDFrontSideUpload => StepProcess.VRDBackSideUpload,
-                StepProcess.VRDBackSideUpload => StepProcess.ConfirmData,
+                StepProcess.IdCardUpload => StepProcess.VrdUpload,
+                StepProcess.VrdUpload => StepProcess.ConfirmData,
                 StepProcess.ConfirmData => StepProcess.CostCalculation,
                 StepProcess.CostCalculation => StepProcess.IssuanceInsurancePolicy,
                 StepProcess.IssuanceInsurancePolicy => StepProcess.Finish
@@ -83,18 +81,12 @@ public class RegistrationService
                 ["default"] = "Upload a photo of your ID card."
             },
 
-            StepProcess.VRDFrontSideUpload => new Dictionary<string, string>
+            StepProcess.VrdUpload => new Dictionary<string, string>
             {
                 ["context"] = "Say good. Say the user to upload a photo of the vehicle registration document (front side).",
                 ["default"] = "Upload a photo of the front side of your vehicle document."
             },
-
-            StepProcess.VRDBackSideUpload => new Dictionary<string, string>
-            {
-                ["context"] = "Say good. Say the user to upload a photo of the vehicle registration document (back side).",
-                ["default"] = "Upload a photo of the back side of your vehicle document."
-            },
-
+            
             StepProcess.ConfirmData => new Dictionary<string, string>
             {
                 ["context"] = $"Ask the user to confirm the data: {GetConfirmationMessage(userId)}. Without emoji!!!",
@@ -140,7 +132,7 @@ public class RegistrationService
         InsuranceDetails? details = GetInsuranceDetails(userId);
         if (details != null)
             return
-                $"Full Name: {details.FullName}\nDate of Birth: {details.DateOfBirth}\nID Card Number: {details.IdCardNumber}\nCar Number: {details.CarNumber}\nCar Brand: {details.CarBrand}\nCar Model: {details.CarModel}\nVIN: {details.VIN}";
+                $"Full Name: {details.FullName}\nDate of Birth: {details.DateOfBirth}\nID Card Number: {details.IdCardNumber}\nCar Number: {details.CarNumber}";
 
         return string.Empty;
     }
